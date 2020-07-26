@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-east-1"
 }
 
 locals {
@@ -60,6 +60,7 @@ resource "aws_eip" "this" {
   instance = module.ec2.id[0]
 }
 
+
 resource "aws_placement_group" "web" {
   name     = "hunky-dory-pg"
   strategy = "cluster"
@@ -74,6 +75,8 @@ resource "aws_network_interface" "this" {
   subnet_id = tolist(data.aws_subnet_ids.all.ids)[count.index]
 }
 
+
+
 module "ec2" {
   source = "../../"
 
@@ -81,12 +84,12 @@ module "ec2" {
 
   name          = "example-normal"
   ami           = data.aws_ami.amazon_linux.id
-  instance_type = "c5.large"
+  instance_type = "t2.micro"
   subnet_id     = tolist(data.aws_subnet_ids.all.ids)[0]
   //  private_ips                 = ["172.31.32.5", "172.31.46.20"]
   vpc_security_group_ids      = [module.security_group.this_security_group_id]
   associate_public_ip_address = true
-  placement_group             = aws_placement_group.web.id
+  //placement_group             = aws_placement_group.web.id
 
   user_data_base64 = base64encode(local.user_data)
 
@@ -128,6 +131,8 @@ module "ec2_with_t2_unlimited" {
   associate_public_ip_address = true
 }
 
+/*
+
 module "ec2_with_t3_unlimited" {
   source = "../../"
 
@@ -149,7 +154,7 @@ module "ec2_with_network_interface" {
 
   name            = "example-network"
   ami             = data.aws_ami.amazon_linux.id
-  instance_type   = "c5.large"
+  instance_type   = "m4.large"
   placement_group = aws_placement_group.web.id
 
   network_interface = [
@@ -169,7 +174,8 @@ module "ec2_zero" {
 
   name                   = "example-zero"
   ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = "c5.large"
+  instance_type          = "m4.large"
   subnet_id              = tolist(data.aws_subnet_ids.all.ids)[0]
   vpc_security_group_ids = [module.security_group.this_security_group_id]
 }
+*/

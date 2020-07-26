@@ -1,3 +1,4 @@
+/*
 output "ids" {
   description = "List of IDs of instances"
   value       = module.ec2.id
@@ -63,3 +64,4 @@ output "credit_specification_t2_unlimited" {
   value       = module.ec2_with_t2_unlimited.credit_specification
 }
 
+*/
